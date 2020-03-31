@@ -1,5 +1,5 @@
 <template>
-    <div id="signup">
+    <div id="register">
        <div class="container h-100">
         <div class="row">
             <div class="col"></div>
@@ -41,7 +41,7 @@
 <script>
 import axios from 'axios';
 export default {
-    name: 'Sigunp',
+    name: 'Register',
     data() {
         return {
             username: '',
@@ -62,7 +62,7 @@ export default {
                     email: this.email,
                     password: this.password
                 }
-                axios.post('http://localhost:5000/signup', newUser)
+                axios.post('http://localhost:5000/register', newUser)
                 .then(res =>{
                     console.log(res);
                     this.error = '';
@@ -94,7 +94,7 @@ export default {
 }
 </script>
 <style scoped>
-    #signup {
+    #register {
         background: rgb(222,216,187);
         background: linear-gradient(0deg, rgba(222,216,187,1) 24%, rgba(73,207,233,1) 61%, rgba(65,131,187,1) 100%);
     }

@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <div class="flex-container">
-      <button @click="logout" class="btn btn-info">Logout</button>
       <div class="card" style="width: 18rem;">
         <img class="card-img-top" src="https://images.unsplash.com/photo-1495954484750-af469f2f9be5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80" alt="Card image cap">
         <div class="card-body">
@@ -88,14 +87,6 @@ export default {
       localStorage.setItem('username', res.data.userData.name)
     })
   },
-
-  methods: {
-    logout(){
-      localStorage.clear()
-        this.$router.push('/login');
-    },
-    
-  }
 }
 </script>
 

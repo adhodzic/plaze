@@ -19,7 +19,7 @@
                     <a href="#"><i id="sidebar-icon" class="fas fa-user-circle"></i></a>
                 </li>
                 <li>
-                    <a href="#"><i id="sidebar-icon" class="fas fa-sign-out-alt"></i></a>
+                    <a @click="logout" class = "logout"><i id="sidebar-icon" class="fas fa-sign-out-alt"></i></a>
                 </li>
             </ul>
     </div>
@@ -41,139 +41,78 @@
 </template>
 
 <script>
-export default {
-    name: 'App'
-}</script>
+    export default {
+        name: 'App',
+        methods: {
+            logout(){
+                localStorage.clear()
+                this.$router.push('/');
+            },
+        },
+    }
+</script>
 
 <style lang="scss" scoped>
+
     .content{
         
     }
-    @-webkit-keyframes swing
-{
-    15%
-    {
-        -webkit-transform: translateX(5px);
-        transform: translateX(5px);
-    }
-    30%
-    {
-        -webkit-transform: translateX(-5px);
-       transform: translateX(-5px);
-    } 
-    50%
-    {
-        -webkit-transform: translateX(3px);
-        transform: translateX(3px);
-    }
-    65%
-    {
-        -webkit-transform: translateX(-3px);
-        transform: translateX(-3px);
-    }
-    80%
-    {
-        -webkit-transform: translateX(2px);
-        transform: translateX(2px);
-    }
-    100%
-    {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
-@keyframes swing
-{
-    15%
-    {
-        -webkit-transform: translateX(5px);
-        transform: translateX(5px);
-    }
-    30%
-    {
-        -webkit-transform: translateX(-5px);
-        transform: translateX(-5px);
-    }
-    50%
-    {
-        -webkit-transform: translateX(3px);
-        transform: translateX(3px);
-    }
-    65%
-    {
-        -webkit-transform: translateX(-3px);
-        transform: translateX(-3px);
-    }
-    80%
-    {
-        -webkit-transform: translateX(2px);
-        transform: translateX(2px);
-    }
-    100%
-    {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
-.navbar:hover{
-    animation: swing 1s;
-}
-  .navbar{
-      margin-left: 100px;
-      margin-right: 80px;
-      margin-top: 20px;
-      margin-bottom: 40px;
-      border-radius: 5px;
-      height: 70px;
-      background-color:rgb(130, 174, 245);
-      h3{
-          color: whitesmoke;
-          transition: font-size 0.5s;
-      }
-      h3:hover{
-          font-size:30px
-      }
-  }
-  .sidenav {
-  height: 100%;
-  width: 80px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color:rgb(130, 174, 245);
-}
+    .navbar{
+        margin-left: 100px;
+        margin-right: 80px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        border-radius: 5px;
+        height: 70px;
+        background-color:rgb(130, 174, 245);
 
-.sidenav a {
-  margin-top: 40px;
-  padding-left: 20px;
-  font-size: 35px;
-  color:whitesmoke;
-  display: block;
-  transition: font-size 0.3s;
-}
+        h3{
+            color: whitesmoke;
+        }
+    }
 
-.sidenav a:hover{
-    font-size: 40px;
-}
+    .sidenav {
+        height: 100%;
+        width: 80px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color:rgb(130, 174, 245);
+    }
 
-.sidenav a:hover {
-  color:rgb(31, 99, 209);
-}
+    .sidenav a {
+        margin-top: 40px;
+        padding-left: 20px;
+        font-size: 35px;
+        color:whitesmoke;
+        display: block;
+        transition: font-size 0.3s;
+    }
+
+    .sidenav a:hover {
+        color:rgb(31, 99, 209);
+    }
+
+    .sidenav .logout:hover {
+        color:rgb(217, 27, 27);
+    }
     @media (max-width: 768px) {
-       .sidenav a{
-           margin-top:10px;
-           margin-bottom:30px;
-       }
-       .navbar{
-           width: 250px;
-           h3{
-               display:none;
-           }
-       }
-    .navbar-down{
-      margin-top:100px;
-    }
+        .sidenav a{
+            margin-top:10px;
+            margin-bottom:30px;
+        }
+
+        .navbar{
+            width: 250px;
+            h3{
+                display:none;
+            }
+        }
+
+        .navbar-down{
+        margin-top:100px;
+        }
     }
 </style>
 
