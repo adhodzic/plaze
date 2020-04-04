@@ -19,6 +19,26 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: () => import(/* webpackChunkName: "about" */ '../views/Register.vue')
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Profile.vue')
+  },
+  {
+    path: '/stats',
+    name: 'Stats',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Stats.vue')
+  },
+  {
+    path: '/my-reviews',
+    name: 'MyReviews',
+    component: () => import(/* webpackChunkName: "about" */ '../views/MyReviews.vue')
+  },
+  {
+    path: '/add',
+    name: 'AddReview',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AddReview.vue')
   }
 ]
 
