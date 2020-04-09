@@ -41,6 +41,7 @@ import _ from 'lodash'
 import store from '@/store.js';
 import Post from '@/components/Post.vue'
 import {Posts} from '@/services'
+import axios from 'axios';
 export default {
   name: 'Home',
   components:{
@@ -51,8 +52,17 @@ export default {
       store
     }
   },
-  mounted(){
-     this.fetchPosts()
+   created(){
+    if(localStorage.getItem('token') === null){
+      this.$router.push('/login');
+    }
+  },
+  mounted() {
+    axios.get('http://localhost:5000/user', { headers: { token: localStorage.getItem('token')}})
+    .then((res) => {
+      localStorage.setItem('username', res.data.userData.name)
+    })
+    this.fetchPosts()
   },
   methods:{
     async fetchPosts() {

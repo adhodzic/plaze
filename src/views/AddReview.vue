@@ -1,5 +1,5 @@
 <template>
-    <div class="stats">
+    <div class="add-review">
 
         <nav v-if="this.$route.name !== 'Login' && this.$route.name !== 'Register'" class="navbar">
         <h3>Enjoying Summer?</h3>
@@ -58,23 +58,17 @@
         </select>
     </div>
   </div>
-  <div id="star-rating">
-        <label for="input-title">Beach Name :</label>
-        <input v-model="store.title" id="input-title" class="form-control is-valid" required>
-       <label for="star-rating">Choose score :</label>
-       <star-rating id="star-rating"  :star-size="50" :show-rating="false" @rating-selected="setRating"></star-rating>
-        <h1 id="score-display">{{store.score}}/5</h1>
         <button id="add-review-btn" type="submit" class="btn btn-primary">Add Review</button>
-  </div>
         </form>
         </div>
     </div>
 </template>
 
 <script>
-import StarRating from 'vue-star-rating'
+import StarRating from 'vue-star-rating';
 import store from '@/store.js';
-import {Posts} from '@/services'
+import {Posts} from '@/services';
+import axios from 'axios';
 export default {
     data(){
         return{
@@ -114,25 +108,21 @@ export default {
 
        async add_new_post() {
             try{
-            let p = await this.getImageBlob()
-            let imageName = "Defaultni user" + "/" + Date.now() + ".png";
-            let result = await storage.ref(imageName).put(p)
-            let url = await result.ref.getDownloadURL()
-
-            let post={
-                title:store.title,
-                url:url,
-                postedBy:'Default User',
-                score:store.score,
-                description:store.description,
-                beach_type:store.beach_type,
-                lf_tower:store.lf_tower,
-                pets_allowed_answer:store.pets_allowed_answer,
-                free_beach:store.free_beach,
-                posted_at:Date.now()
+            let blobData = await this.getImageBlob()
+            let data = new FormData()
+            data.append('title', store.title)
+            data.append('postImage', blobData)
+            console.log(store.title)
+            let config = {
+            header : {
+                'Content-Type' : 'multipart/form-data'
             }
-
-              await Posts.new_post(post)
+            }
+            axios.post('http://localhost:5000/newpost', data, config).then(response => {
+            console.log('response', response)
+            }).catch(error => {
+            console.log('error', error)
+            })
               this.$router.push({name:'Home'})
                     }catch(e){
                         console.log("Error!",e)
@@ -163,7 +153,7 @@ export default {
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-size: 18px;
     }
-    .stats{
+    .add-review{
         margin-top: 80px;
     }
     .navbar{
@@ -198,10 +188,6 @@ export default {
 #input-title{
     width: 300px;
     margin-bottom: 20px;
-}
-
-#add-review-btn{
-    transform: translate(390px,-105px);
 }
     @media (max-width: 768px){
           .croppa-container{

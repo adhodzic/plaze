@@ -19,7 +19,7 @@
                     <router-link to="/profile"><a href="#"><i id="sidebar-icon" class="fas fa-user-circle"></i></a></router-link>
                 </li>
                 <li>
-                    <router-link to="/login"><a href="#"><i id="sidebar-icon" class="fas fa-sign-out-alt"></i></a></router-link>
+                    <a id="logout-icon" @click="logout" href="#"><i id="sidebar-icon" class="fas fa-sign-out-alt"></i></a>
                 </li>
             </ul>
     </div>
@@ -42,6 +42,20 @@ import store from '@/store.js';
             return{
                 store
             }
+        },
+        mounted(){
+            if(localStorage==null){
+                 this.$router.push('/login');
+            }
+            else{
+                 this.$router.push('/');
+            }
+        },
+        methods: {
+            logout(){
+                localStorage.clear()
+                this.$router.push('/login');
+            }
         }
     }
 </script>
@@ -50,6 +64,9 @@ import store from '@/store.js';
     .content{
         
     }
+  #logout-icon{
+      transform: translateX(12px);
+  }
   .sidenav {
   height: 100%;
   width: 80px;

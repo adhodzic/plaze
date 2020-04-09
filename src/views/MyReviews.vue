@@ -1,5 +1,5 @@
 <template>
-    <div class="stats">
+    <div class="my-reviews">
         <div class="container">
             <h1>This is My Reviews Page!</h1>
         </div>

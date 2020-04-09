@@ -39,6 +39,12 @@ const routes = [
     path: '/add',
     name: 'AddReview',
     component: () => import(/* webpackChunkName: "about" */ '../views/AddReview.vue')
+  },
+  {
+    path: '/post/:id',
+    props:true,
+    name: 'PostDetail',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PostDetail.vue')
   }
 ]
 

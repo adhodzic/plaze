@@ -5,23 +5,24 @@
         <div class="row">
             <div class="col"></div>
                 <div id="Mid_col_background" class="col-md-5 col-sm">
-                    <form>
+                    <form  @submit.prevent="login" autocomplete="off">
                         <div class="form-group">
                             <h3 style="color: whitesmoke;">Sign In</h3>
                         </div>
                         <div class="form-group">
                           <label style="color: whitesmoke;" for="exampleInputEmail1"><strong>Email address</strong></label>
-                          <input type="email" class="form-control"  placeholder="Janedoe@gmail.com" aria-describedby="emailHelp">
+                          <input v-model="email" type="email" class="form-control"  placeholder="Janedoe@gmail.com" aria-describedby="emailHelp">
                         </div>
                         <div class="form-group">
                           <label style="color: whitesmoke;" for="exampleInputPassword1"><strong>Password</strong></label>
-                          <input type="password" class="form-control" placeholder="**********">
+                          <input  v-model="password" type="password" class="form-control" placeholder="**********">
                         </div>
                         <div class="flex-container">
-                            <router-link to="/"><button style="margin-right: 30px;" type="submit" class="btn btn-info"><strong>Sign In</strong></button></router-link>
+                            <button style="margin-right: 30px;" type="submit" class="btn btn-info"><strong>Sign In</strong></button>
                             <router-link to="/register"><button style="margin-left: 10px; margin-right: 30px;" type="submit" class="btn btn-danger"><strong>Register</strong></button></router-link>
                             <a id="forgot_password" style="color:whitesmoke;" href="#"><strong>Forgot password?</strong></a>
                         </div>
+                        <label style="color: red;" for="exampleInputPassword1"><strong>{{this.error}}</strong></label>
                       </form>
                 </div>
             <div class="col"></div>
@@ -32,7 +33,37 @@
 </template>
 
 <script>
-     
+import axios from 'axios';
+export default {
+    name: 'Login',
+    data() {
+        return {
+            email: '',
+            password: '',
+            error: ''
+        }
+    },
+    methods: {
+        login(){
+            let user = {
+                email: this.email,
+                password: this.password
+            }
+            axios.post('http://localhost:5000/login', user)
+            .then(res =>{
+                if(res.status == 200) {
+                    localStorage.setItem('token', res.data.token)
+                    console.log(localStorage);
+                    this.$router.push('/')
+                }
+                this.error = '';
+            }, err => {
+                console.log(err.response.data.error);
+                this.error = err.response.data.error;
+            })
+        }
+    }
+}
 </script>
 
 <style lang="scss" scoped>

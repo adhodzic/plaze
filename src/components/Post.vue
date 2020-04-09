@@ -5,7 +5,7 @@
         <p id="postedBy-text">{{info.postedBy}}</p>
         <p id="beach-location-text"><img id="post-location-icon" src="@/assets/maps-and-flags.png" alt="">{{info.title}}</p>
          <star-rating id="star-rating"  :star-size="30" :read-only="true" :show-rating="false" :rating="info.score"></star-rating>
-         <button id="details-button" type="button" class="btn btn-primary btn-sm">Details</button>
+         <button @click="goToDetails()" id="details-button" type="button" class="btn btn-primary btn-sm">Details</button>
         </div>
       </div>
 </template>
@@ -16,6 +16,13 @@ export default {
     props:["info"],
     components: {
       StarRating
+  },
+  methods:{
+    goToDetails(){
+      if(this.$route.name !== 'PostDetail'){
+        this.$router.push({path:`post/${this.info.id}`})
+      }
+    }
   }
 }
 </script>
