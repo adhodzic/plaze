@@ -1,28 +1,28 @@
-# auth
+# project_wa
 
 ## Project setup
 ```
 npm install
 ```
 
-### RUN FRONT-END (in folder auth run these commands)
+### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-### RUN BACK-END (in folder auth run these commands)
+### Compiles and minifies for production
 ```
-npm run server
+npm run build
 ```
 
-PROMJENE :
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config
 
-1. Autentikacija nesto ne radi,kaze da lozinka nije ista na Signupu.
-2. Više nije Landing.vue sada je Home.vue
-3. Više nije Signup.vue sada je Register.vue
-4. Napravio sam neke sitne izmjene ono u index.html dodani su neki CDN-ns da mozže renderat bootstrap i ostalo.
-5. Suklando sa promijenjenim imenima viewsa promijenjene su i nazivi ruta u router fileu.
-6. Rute su sljedeće : / za home  /login za login i  /register za registraciju.
-7. Kod koji nije radio za autentikaciju sam izbrisao ovo je čisto frontend.
-8. Kod za autentikaciju je na branchu prije.
-9. Folder za ulaz u app više nije auth nego project_wa.
+WHAT'S NEW:
+- POSTAVLJENA RUTA PostDetail. MOGUĆE DA ĆE TI BACATI ERRORS JER SU U LAYOUTU KAKO BI TREBALO IZGLEDATI TO VARIJABLE KOJE SAM JA KORISTIO NA MOM PROJEKTU DOMA KAD SAM RADIO PA IH SAMO POBRIŠI I STAVI NEŠTO DRUGO ČISTO DA TI ISPISUJE NEŠTO DA VIDIŠ DA SI NA RUTI. 
+- SUKLADNO SA NOVOM RUTOM UPDATEANA JE POST COMPONENTA DA KLIKNOM NA BUTTON DETAILS ODVEDE KORISNIKA NA PostDetails RUTU.
+- RUTA PostDetails NIJE GOTOVA ŠTO SE TIĆE LAYOUTA ALI RUTA KAO RUTA RADI I MOŽE SE DOVLAČIT PODATKE NA NJU.
+- NA RUTU ADDREVIEW SAM ZALJEPIO ONO ŠTA SI MI POSLAO NA DISCU ZA DODAVANJE POSTA I MAKNUO SAM STAR RATING KOMPONENTU NA TOJ RUTI NA TVOJ ZAHTJEV :)
+- BIT ĆE TU JOŠ POLIRANJA ŠTA SE TIČE FRONTENDA ALI SAMO DA BACKEND PRORADI OVO OSTALO DIZAJN ĆU JA EZPZ.
+
+
