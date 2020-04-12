@@ -34,35 +34,35 @@
     </div>
     <div class="col-md col-sm">
         <label for="description-input">Description :</label>
-        <textarea v-model="store.description" id="description-input" required class="form-control is-valid" rows="3" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></textarea>
+        <textarea v-model="newpost.description" id="description-input" required class="form-control is-valid" rows="3" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></textarea>
     </div>
     <div class="col-md col-sm">
         <label for="description-input">Title :</label>
-        <textarea v-model="store.title" id="title-input" required class="form-control is-valid" rows="3" placeholder="Title"></textarea>
+        <textarea v-model="newpost.title" id="title-input" required class="form-control is-valid" rows="3" placeholder="Title"></textarea>
     </div>
     <div class="col-md col-sm">
         <label for="beach-type">Beach Type</label>
-        <select v-model="store.beach_type" id="beach-type" class="form-control is-valid" required>
+        <select v-model="newpost.beach_type" id="beach-type" class="form-control is-valid" required>
             <option :key="beach_type" v-for="beach_type in store.beach_types">{{beach_type}}</option>
         </select>
 
         <label for="lifeguard-check">Lifeguard Tower ?</label>
-        <select v-model="store.lf_tower" id="lifeguard-check" class="form-control is-valid" required>
+        <select v-model="newpost.lf_tower" id="lifeguard-check" class="form-control is-valid" required>
             <option :key="lf_tower" v-for="lf_tower in store.lf_towers">{{lf_tower}}</option>
         </select>
 
         <label for="pets-check">Pets allowed ?</label>
-        <select v-model="store.pets_allowed_answer" id="pets-check" class="form-control is-valid" required>
+        <select v-model="newpost.pets_allowed_answer" id="pets-check" class="form-control is-valid" required>
             <option :key="pets_allowed_answer" v-for="pets_allowed_answer in store.pets_allowed">{{pets_allowed_answer}}</option>
         </select>
 
         <label for="free-check">Free to access ?</label>
-        <select v-model="store.free_beach" id="free-check" class="form-control is-valid" required>
+        <select v-model="newpost.free_beach" id="free-check" class="form-control is-valid" required>
             <option :key="free_beach" v-for="free_beach in store.free_beaches">{{free_beach}}</option>
         </select>
     </div>
   </div>
-        <button id="add-review-btn" type="submit" class="btn btn-primary">Add Review</button>
+        <button id="add-review-btn" type="submit" class="btn btn-primary">Post beach</button>
         </form>
         </div>
     </div>
@@ -76,18 +76,20 @@ import axios from 'axios';
 export default {
     data(){
         return{
-            store
+            store,
+            newpost: {
+                title: '',
+                postedBy: '',
+                description: '',
+                beach_type: '',
+                lf_tower: '',
+                pets_allowed_answer: '',
+                free_beach: '',
+                blobData: null
+            }
         }
     },
     mounted(){
-        store.score=0;
-        store.title='',
-        store.postedBy='',
-        store.description='',
-        store.beach_type='',
-        store.lf_tower='',
-        store.pets_allowed_answer='',
-        store.free_beach=''
     },
     components: {
       StarRating
@@ -100,7 +102,7 @@ export default {
       },
       getImageBlob(){
           return new Promise((resolve,reject)=>{
-              store.imageData.generateBlob(blobData =>{
+              this.store.imageData.generateBlob(blobData =>{
                   if(blobData!=null){
                       resolve(blobData)
                   }else{
@@ -112,14 +114,18 @@ export default {
 
        async add_new_post() {
             try{
-            let blobData = await this.getImageBlob()
+            this.newpost.blobData = await this.getImageBlob()
             let data = new FormData()
-            data.append('title', store.title)
-            data.append('postImage', blobData)
-            console.log(store.title)
+            for(const property in this.newpost){
+                data.append(property, this.newpost[property])
+            }
+            data.append('token', localStorage.getItem('token'))
+            for(var pair of data.entries()) {
+                console.log(pair[0]+ ', '+ pair[1]); 
+            }
             let config = {
             header : {
-                'Content-Type' : 'multipart/form-data'
+                'Content-Type' : 'multipart/form-data',
             }
             }
             axios.post('http://localhost:5000/newpost', data, config).then(response => {

@@ -2,7 +2,7 @@
         <div class="card" style="width: 19rem; height:370px">
         <img style="height:170px;" class="card-img-top" :src="info.url" alt="Card image cap">
         <div class="card-body">
-        <p id="postedBy-text">{{info.postedBy}}</p>
+        <p id="postedBy-text">{{info.postedBy.name}}</p>
         <p id="beach-location-text"><img id="post-location-icon" src="@/assets/maps-and-flags.png" alt="">{{info.title}}</p>
          <star-rating id="star-rating"  :star-size="30" :read-only="true" :show-rating="false" :rating="info.score"></star-rating>
         </div>

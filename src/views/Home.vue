@@ -60,7 +60,7 @@ export default {
   mounted() {
     axios.get('http://localhost:5000/user', { headers: { token: localStorage.getItem('token')}})
     .then((res) => {
-      localStorage.setItem('username', res.data.userData.name)
+      localStorage.setItem('name', res.data.userData.name)
     })
     this.fetchPosts()
   },
