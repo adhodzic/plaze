@@ -33,42 +33,30 @@
 
 <script>
 import store from '@/store.js';
+import Axios from 'axios';
  export default {
    props: ['id'],
    data(){
      return{
        store,
-       post:[]
+       post: null
      }
    },
   async mounted(){
-     this.post=await this.getPostDetails(this.id,store.posts) 
-     console.log("Post data: ",this.post)
+    console.log(this.id)
+    let postDetails = await Axios.get("http://localhost:5000/details", { headers: { title: this.id}})
+    this.post = postDetails.data
+    console.log(this.post);
    },
    methods:{
-     getPostDetails(key,polje){
-       return new Promise((resolve,reject)=>{
-         let data=null
-         for(let i=0;i<polje.length;i++){
-           if(polje[i].id === key){
-             data=polje[i]
-           }
-         }
-         if(data!=null){
-           resolve(data)
-         }
-         else{
-           reject("Došlo je do greške u dohvatu objave!")
-         }
-       })
-      }
+       
    },
    computed:{
-      timeAgo(){
+     /*  timeAgo(){
       let a=Date(this.post.posted_at)
       let d=a.toString()
       return moment(d).fromNow();
-    }
+    } */
    }
   }
 </script>
