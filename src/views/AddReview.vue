@@ -93,54 +93,50 @@ export default {
     },
     components: {
       StarRating
-  },
-  methods:{
-      setRating(rating){
-          this.rating = rating
-          store.score=this.rating
-          console.log(store.score)
-      },
-      getImageBlob(){
-          return new Promise((resolve,reject)=>{
-              this.store.imageData.generateBlob(blobData =>{
-                  if(blobData!=null){
-                      resolve(blobData)
-                  }else{
-                      reject("Error with getting image!")
-                  }
-              })  
-          })
-      },
-
-       async add_new_post() {
-            try{
-            this.newpost.blobData = await this.getImageBlob()
-            let data = new FormData()
-            for(const property in this.newpost){
-                data.append(property, this.newpost[property])
-            }
-            data.append('token', localStorage.getItem('token'))
-            for(var pair of data.entries()) {
-                console.log(pair[0]+ ', '+ pair[1]); 
-            }
-            let config = {
-            header : {
-                'Content-Type' : 'multipart/form-data',
-            }
-            }
-            axios.post('http://localhost:5000/newpost', data, config).then(response => {
-            console.log('response', response)
-            }).catch(error => {
-            console.log('error', error)
-            })
-              this.$router.push({name:'Home'})
-                    }catch(e){
-                        console.log("Error!",e)
+    },
+    methods:{
+        setRating(rating){
+            this.rating = rating
+            store.score=this.rating
+            console.log(store.score)
+        },
+        getImageBlob(){
+            return new Promise((resolve,reject)=>{
+                this.store.imageData.generateBlob(blobData =>{
+                    if(blobData!=null){
+                        resolve(blobData)
+                    }else{
+                        reject("Error with getting image!")
                     }
+                })  
+            })
+        },
+
+        async add_new_post() {
+            try{
+                this.newpost.blobData = await this.getImageBlob()
+                let data = new FormData()
+                let config = {
+                    header: {
+                        'Content-Type' : 'multipart/form-data',
+                    }
+                }
+
+                for(const property in this.newpost){
+                    data.append(property, this.newpost[property])
+                }
+                data.append('token', localStorage.getItem('token'))
+
+                await axios.post('http://localhost:5000/newpost', data, config).then(response => {
+                }).catch(error => {
+                    console.log('error', error)
+                })
+                this.$router.push({name:'Home'})
+            }catch(e){
+                console.log("Error!",e)
             }
-
-
         }
+    }
 }
 </script>
 
