@@ -5,7 +5,7 @@
         <figcaption class="figure-caption">{{timeAgo}}.</figcaption>
         <div class="data">
           <div class="user">
-            <p class="lead">Posted By: {{post.postedBy}}</p>
+            <p class="lead">Posted By: {{post.postedBy.name}}</p>
           </div>
           <div class="description">
             <p>{{post.description}}</p>
@@ -26,8 +26,21 @@
             <div class="free">
               <p>Free: {{post.free_beach}}</p>
             </div>
+            <div class="comment" :key="comment.id" v-for="comment in this.comments">
+              <h1 v-if="!comment.parentId" @click="replay(comment._id)">{{comment.commentedBy["name"]}} {{comment.text}}</h1>
+              <p :key="replay.id" v-for="replay in comment.replays" style="padding-left:5em">{{replay.commentedBy["name"]}}: {{replay.text}}</p>
+            </div>
           </div>
         </div>
+        <form @submit.prevent="newComment">
+          <div class="form-group">
+            <label style="color: whitesmoke;" for="comment"><strong>comment</strong></label>
+            <input v-model="comment" type="text" class="form-control" id="comment" placeholder="Comment" aria-describedby="emailHelp" required>
+          </div>
+          <div class="flex-container">
+              <button type="submit" class="btn btn-primary"><strong>Post</strong></button>
+          </div>
+        </form>
   </div>
 </template>
 
@@ -40,17 +53,33 @@ import Axios from 'axios';
    data(){
      return{
        store,
-       post: null
+       post: null,
+       comments: null,
+       comment: ""
      }
    },
   async mounted(){
     console.log(this.id)
-    let postDetails = await Axios.get("http://localhost:5000/details", { headers: { title: this.id}})
+    let postDetails = await Axios.get("http://localhost:5000/details", { headers: { id: this.id}})
     this.post = postDetails.data
-    console.log(this.post);
+    let comment = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
+    this.comments = comment.data;
+    console.log(this.comments)
+
    },
    methods:{
-       
+       async newComment() {
+          let data = {
+            text: this.comment,
+            id: this.id,
+            token: localStorage.getItem("token")
+          }
+          let comment = await Axios.post("http://localhost:5000/newcomment", data)
+       },
+
+       replay(id){
+         console.log(id)
+       }
    },
    computed:{
       timeAgo(){
