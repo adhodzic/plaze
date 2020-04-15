@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import store from '@/store.js';
 import Axios from 'axios';
  export default {
@@ -52,11 +53,12 @@ import Axios from 'axios';
        
    },
    computed:{
-     /*  timeAgo(){
-      let a=Date(this.post.posted_at)
-      let d=a.toString()
-      return moment(d).fromNow();
-    } */
+      timeAgo(){
+        let a = new Date(this.post.posted_at)
+        let d = a.toString()
+        console.log(a)
+        return moment(d).fromNow();
+    }
    }
   }
 </script>

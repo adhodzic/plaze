@@ -125,6 +125,7 @@ export default {
                 for(const property in this.newpost){
                     data.append(property, this.newpost[property])
                 }
+                data.append('posted_at', Date.now())
                 data.append('token', localStorage.getItem('token'))
 
                 await axios.post('http://localhost:5000/newpost', data, config).then(response => {
