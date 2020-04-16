@@ -26,9 +26,12 @@
             <div class="free">
               <p>Free: {{post.free_beach}}</p>
             </div>
-            <div class="comment" :key="comment.id" v-for="comment in this.comments">
-              <h1 v-if="!comment.parentId" @click="replay(comment._id)">{{comment.commentedBy["name"]}} {{comment.text}}</h1>
-              <p :key="replay.id" v-for="replay in comment.replays" style="padding-left:5em">{{replay.commentedBy["name"]}}: {{replay.text}}</p>
+            <div class="comment">
+              <p>Comments:</p>
+             <div @click="toggleCollapse" :key="comment.id" v-for="comment, i in this.comments" >
+                <h3  @click="$set(closedItems, i, !closedItems[i])"><b>{{comment.commentedBy["name"]}}:</b> {{comment.text}}</h3>
+                <p v-if="closedItems[i]" :key="replay.id" v-for="replay in comment.replays" style="padding-left:5em"><b>{{replay.commentedBy["name"]}}:</b> {{replay.text}}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -55,7 +58,8 @@ import Axios from 'axios';
        store,
        post: null,
        comments: null,
-       comment: ""
+       comment: "",
+       closedItems: []
      }
    },
   async mounted(){
@@ -79,6 +83,10 @@ import Axios from 'axios';
 
        replay(id){
          console.log(id)
+       },
+
+       toggleCollapse(){
+         this.isCollapsable = !this.isCollapsable;
        }
    },
    computed:{
