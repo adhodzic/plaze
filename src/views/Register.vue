@@ -11,19 +11,19 @@
                         </div>
                           <div class="form-group">
                             <label style="color: whitesmoke;" for="exampleInputEmail1"><strong>Username</strong></label>
-                            <input v-model="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="Janedoe" aria-describedby="emailHelp" required>
+                            <input v-model="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="Janedoe" aria-describedby="emailHelp">
                           </div>
                         <div class="form-group">
                           <label style="color: rgb(245, 245, 245);" for="exampleInputEmail1"><strong>Email address</strong></label>
-                          <input v-model="email"  type="email" class="form-control" placeholder="Janedoe@gmail.com" aria-describedby="emailHelp" required>
+                          <input v-model="email"  type="email" class="form-control" placeholder="Janedoe@gmail.com" aria-describedby="emailHelp">
                         </div>
                         <div class="form-group">
                           <label style="color: whitesmoke;" for="exampleInputPassword1"><strong>Password</strong></label>
-                          <input v-model="password" type="password" class="form-control" placeholder="**********" required>
+                          <input v-model="password" type="password" class="form-control" placeholder="**********" >
                         </div>
                         <div class="form-group">
                             <label style="color: whitesmoke;" for="exampleInputPassword1"><strong>Confirm Password</strong></label>
-                            <input v-model="passwordConf" type="password" class="form-control" placeholder="**********" required>
+                            <input v-model="passwordConf" type="password" class="form-control" placeholder="**********">
                           </div>
                         <div class="flex-container">
                             <button type="submit" class="btn btn-primary"><strong>Register</strong></button>
@@ -57,7 +57,7 @@ export default {
         signup() {
             if(this.password === this.passwordConf && this.password.length > 6){
                 let newUser = {
-                    name: this.username,
+                    username: this.username,
                     email: this.email,
                     password: this.password
                 }

@@ -2,9 +2,10 @@
         <div class="card" style="width: 19rem; height:370px">
         <img style="height:170px;" class="card-img-top" :src="info.url" alt="Card image cap">
         <div class="card-body">
-        <p id="postedBy-text">{{info.postedBy.name}}</p>
+        <p id="postedBy-text">{{info.postedBy}}</p>
         <p id="beach-location-text"><img id="post-location-icon" src="@/assets/maps-and-flags.png" alt="">{{info.title}}</p>
-         <star-rating id="star-rating"  :star-size="30" :read-only="true" :show-rating="false" :rating="info.score"></star-rating>
+         <button @click="goToDetails()" id="details-button" type="button" class="btn btn-primary btn-sm">Details</button>
+         <button @click="goToEdit()" id="edit-button" type="button" class="btn btn-danger btn-sm">Edit Post</button>
         </div>
       </div>
 </template>
@@ -15,6 +16,18 @@ export default {
     props:["info"],
     components: {
       StarRating
+  },
+  methods:{
+    goToDetails(){
+      if(this.$route.name !== 'PostDetail'){
+        this.$router.push({path:`post/${this.info.id}`})
+      }
+    },
+    goToEdit(){
+      if(this.$route.name !== 'EditPost'){
+        this.$router.push({path:`edit-post/${this.info.id}`})
+      }
+    }
   }
 }
 </script>
@@ -47,7 +60,10 @@ export default {
   text-align: left;
 }
 #details-button{
-  transform: translate(95px,-140px);
+  transform: translate(135px,-140px);
+}
+#edit-button{
+  transform: translate(-120px,-140px);
 }
 .card-body{
   background-color: rgb(220, 234, 247);
