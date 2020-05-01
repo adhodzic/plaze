@@ -2,9 +2,8 @@
         <div class="card" style="width: 19rem; height:370px">
         <img style="height:170px;" class="card-img-top" :src="info.url" alt="Card image cap">
         <div class="card-body">
-        <p id="postedBy-text">{{info.postedBy}}</p>
+        <p id="postedBy-text">{{info.postedBy.name}}</p>
         <p id="beach-location-text"><img id="post-location-icon" src="@/assets/maps-and-flags.png" alt="">{{info.title}}</p>
-         <button @click="goToDetails()" id="details-button" type="button" class="btn btn-primary btn-sm">Details</button>
          <button @click="goToEdit()" id="edit-button" type="button" class="btn btn-danger btn-sm">Edit Post</button>
         </div>
       </div>
@@ -18,11 +17,6 @@ export default {
       StarRating
   },
   methods:{
-    goToDetails(){
-      if(this.$route.name !== 'PostDetail'){
-        this.$router.push({path:`post/${this.info.id}`})
-      }
-    },
     goToEdit(){
       if(this.$route.name !== 'EditPost'){
         this.$router.push({path:`edit-post/${this.info.id}`})

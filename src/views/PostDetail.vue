@@ -61,7 +61,7 @@
     <figcaption style="margin-bottom:250px" class="figure-caption">{{timeAgo}}.</figcaption>
     <div class="data">
       <div class="user">
-        <p class="lead">Posted By: {{post.postedBy}}</p>
+        <p class="lead">Posted By: {{post.postedBy.name}}</p>
       </div>
       <div class="description">
         <p>{{post.description}}</p>
@@ -101,46 +101,29 @@
 
     <div class="container">
     <div class="comment-section">
-      <div class="comment-box">
-        <p><img id="profile-picture" src="@/assets/account.png" alt="Profile Picture"> <strong style="margin-right:15px">Jane Doe</strong><small>15.06.2020.</small></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing 
-           elit, sed do eiusmod tempor incididunt ut labore et 
-           Ut enim ad minim veniam, quis nostrud exercitation 
-           laboris nisi ut aliquip ex aute iruredolor in repr
-           ea commodo consequat. Duis dolore magna aliqua. 
-           cillum dolore eu fugiat nulla pariatur. ullamco 
-           Excepteur sint occaecat cupidatat non proident,
-           mollit anim id est laborum.sunt in culpa qui</p>
-      </div>
-
-        <div class="comment-box">
-        <p><img id="profile-picture" src="@/assets/account.png" alt="Profile Picture"> <strong style="margin-right:15px">Jane Doe</strong><small>15.06.2020.</small></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing 
-           elit, sed do eiusmod tempor incididunt ut labore et 
-           Ut enim ad minim veniam, quis nostrud exercitation 
-           laboris nisi ut aliquip ex aute iruredolor in repr
-           ea commodo consequat. Duis dolore magna aliqua. 
-           cillum dolore eu fugiat nulla pariatur. ullamco 
-           Excepteur sint occaecat cupidatat non proident,
-           mollit anim id est laborum.sunt in culpa qui</p>
-      </div>
-
-        <div class="comment-box">
-        <p><img id="profile-picture" src="@/assets/account.png" alt="Profile Picture"> <strong style="margin-right:15px">Jane Doe</strong><small>15.06.2020.</small></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing 
-           elit, sed do eiusmod tempor incididunt ut labore et 
-           Ut enim ad minim veniam, quis nostrud exercitation 
-           laboris nisi ut aliquip ex aute iruredolor in repr
-           ea commodo consequat. Duis dolore magna aliqua. 
-           cillum dolore eu fugiat nulla pariatur. ullamco 
-           Excepteur sint occaecat cupidatat non proident,
-           mollit anim id est laborum.sunt in culpa qui</p>
+      <div class="comment-box" v-if="comment.parentId == null" :key="comment.id" v-for="comment, i in this.comments" style="margin-bottom:20px; padding-bottom:20px;">
+        <p><img id="profile-picture" src="@/assets/account.png" alt="Profile Picture"> <strong style="margin-right:15px">{{comment.commentedBy["name"]}}</strong><small>{{comment.posted_at}}</small></p>
+        <p>{{comment.text}}</p>
+        <div @click="$set(closedItems, i, !closedItems[i])" class="replay">
+          <i class="fas fa-reply-all"></i>
+        </div>
+        <div v-if="closedItems[i]" style="padding-left:5em">
+          <div :key="replay.id" v-for="replay in comment.replays">
+            <p><b>{{replay.commentedBy["name"]}}:</b> {{replay.text}}</p>
+          </div>
+          <div>
+            <form @submit.prevent="NewReplay(comment._id)">
+                <input v-model="replay_text" id="comment-input" class="form-control" type="text" placeholder="Replay" required/>
+                <button id="comment-button" type="submit" class="btn btn-primary">reply</button>
+          </form>
+          </div>
+        </div>
       </div>
     </div>
     </div>
 
-    <form id="comment-form">
-          <input id="comment-input" class="form-control" type="text" placeholder="Your comment goes here!"/>
+    <form id="comment-form" @submit.prevent="newComment()">
+          <input v-model="comment_text" id="comment-input" class="form-control" type="text" placeholder="Your comment goes here!" required/>
           <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
     </form>
   </div>
@@ -150,63 +133,101 @@
 import store from "@/store.js";
 import moment from "moment";
 import { Posts } from "@/services";
+import Axios from 'axios';
 export default {
   props: ["id"],
-  data() {
-    return {
-      store,
-      post: ""
-    };
-  },
-  async mounted() {
-    this.post = await Posts.getOne(this.id);
-    console.log(this.post);
-    /*      this.post=await this.getPostDetails(this.id,store.posts)
-     console.log("Post data: ",this.post) */
-  },
-  methods: {
-    /*      getPostDetails(key,polje){
-       return new Promise((resolve,reject)=>{
-         let data=null
-         for(let i=0;i<polje.length;i++){
-           if(polje[i].id === key){
-             data=polje[i]
-           }
-         }
-         if(data!=null){
-           resolve(data)
-         }
-         else{
-           reject("Došlo je do greške u dohvatu objave!")
-         }
-       })
-      } */
-  },
-  computed: {
-    timeAgo() {
-      let a = new Date(this.post.posted_at).getTime();
-      return moment(a).fromNow();
+  data(){
+     return{
+       store,
+       post: null,
+       comments: null,
+       comment_text: "",
+       replay_text: "",
+       closedItems: []
+     }
+   },
+  async mounted(){
+    console.log(this.id)
+    let postDetails = await Axios.get("http://localhost:5000/details", { headers: { id: this.id}})
+    this.post = postDetails.data
+    let comment = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
+    this.comments = comment.data;
+    console.log(this.comments)
+
+   },
+   methods:{
+       async newComment() {
+          let data = {
+            text: this.comment,
+            id: this.id,
+            token: localStorage.getItem("token")
+          }
+          let comment = await Axios.post("http://localhost:5000/newcomment", data)
+          let comment_get = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
+          this.comments = comment_get.data;
+          this.comment_text = "";
+          console.log(this.comments)
+       },
+
+       async NewReplay(replay){
+         let data = {
+            text: this.replay_text,
+            id: this.id,
+            comment: replay,
+            token: localStorage.getItem("token")
+          }
+          let comment = await Axios.post("http://localhost:5000/newcomment", data)
+          let comment_get = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
+          this.comments = comment_get.data;
+          this.replay_text = "";
+          console.log(this.comments)
+       },
+
+       toggleCollapse(){
+         this.isCollapsable = !this.isCollapsable;
+       },
+        async fetchPosts() {
+          let res = await axios.get('http://localhost:5000/posts');
+          store.posts = res.data;
+          console.log(res)
+        },
+   },
+   computed:{
+      timeAgo(){
+        let a = new Date(this.post.posted_at)
+        let d = a.toString()
+        console.log(a)
+        return moment(d).fromNow();
     }
+   }
   }
-};
 </script>
 
 <style scoped lang="scss">
+.replay{
+  width: 20px;
+  height: 20px;
+  transform: translate(490px,-30px);
+}
 #comment-form{
   margin-top: 20px;
   transform: translate(0px,-480px);
   #comment-input {
-  transform: translate(15px,0px);
+  transform: translate(25px,-290px);
   width: 400px;
   }
   #comment-button{
-    transform: translate(470px,-45px);
+    transform: translate(510px,-335px);
     margin-top: 10px;
   } 
 }
-.comment-box {
+.comment-box{
+  height: 150px;
+  width: 600px;
   border-radius: 15px;
-  background-color: rgb(227, 241, 255);
+  background-color: rgb(216, 216, 216);
+  padding: 10px;
+  overflow: auto;
   .row {
     margin-top: 10px;
   }
@@ -240,8 +261,9 @@ export default {
   margin-bottom: 30px;
 }
 .comment-section {
-  width: 550px;
-  height: 400px;
+  width: 650px;
+  height: 600px;
+  padding: 10px;
   transform: translate(0px, -500px);
   overflow: auto;
 }
