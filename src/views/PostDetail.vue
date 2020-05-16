@@ -107,9 +107,15 @@
         <div @click="$set(closedItems, i, !closedItems[i])" class="replay">
           <i class="fas fa-reply-all"></i>
         </div>
+        <div @click="deleteComment(comment._id)">
+          <i class="fas fa-trash-alt"></i>
+        </div>
         <div v-if="closedItems[i]" style="padding-left:5em">
           <div :key="replay.id" v-for="replay in comment.replays">
             <p><b>{{replay.commentedBy["name"]}}:</b> {{replay.text}}</p>
+            <div @click="deleteComment(replay._id)">
+              <i class="fas fa-trash-alt"></i>
+            </div>
           </div>
           <div>
             <form @submit.prevent="NewReplay(comment._id)">
@@ -133,7 +139,6 @@
 import store from "@/store.js";
 import moment from "moment";
 import { Posts } from "@/services";
-import Axios from 'axios';
 export default {
   props: ["id"],
   data(){
@@ -147,50 +152,33 @@ export default {
      }
    },
   async mounted(){
-    console.log(this.id)
-    let postDetails = await Axios.get("http://localhost:5000/details", { headers: { id: this.id}})
-    this.post = postDetails.data
-    let comment = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
-    this.comments = comment.data;
-    console.log(this.comments)
-
+    let postDetails = await Posts.getOne(this.id)
+    this.post = postDetails
+    let result = await Posts.get_post_comments(this.id)
+    this.comments = result.data
    },
    methods:{
        async newComment() {
-          let data = {
-            text: this.comment,
-            id: this.id,
-            token: localStorage.getItem("token")
-          }
-          let comment = await Axios.post("http://localhost:5000/newcomment", data)
-          let comment_get = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
-          this.comments = comment_get.data;
+          await Posts.new_comment(this.comment_text, this.id)
+          let result = await Posts.get_post_comments(this.id)
+          this.comments = result.data
           this.comment_text = "";
-          console.log(this.comments)
        },
-
-       async NewReplay(replay){
-         let data = {
-            text: this.replay_text,
-            id: this.id,
-            comment: replay,
-            token: localStorage.getItem("token")
-          }
-          let comment = await Axios.post("http://localhost:5000/newcomment", data)
-          let comment_get = await Axios.get("http://localhost:5000/comments", { headers: {id: this.id}})
-          this.comments = comment_get.data;
+       async deleteComment(id){
+         await Posts.delete_comment(id)
+         let result = await Posts.get_post_comments(this.id)
+         this.comments = result.data
+       },
+       async NewReplay(id){    
+          await Posts.new_replay(this.replay_text, this.id, id)
+          let result = await Posts.get_post_comments(this.id)
+          this.comments = result.data
           this.replay_text = "";
-          console.log(this.comments)
        },
 
        toggleCollapse(){
          this.isCollapsable = !this.isCollapsable;
        },
-        async fetchPosts() {
-          let res = await axios.get('http://localhost:5000/posts');
-          store.posts = res.data;
-          console.log(res)
-        },
    },
    computed:{
       timeAgo(){

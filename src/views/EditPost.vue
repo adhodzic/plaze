@@ -25,36 +25,36 @@
     
     <div class="row row-cols-4">
     <div class="col-md col-sm">
-        <croppa v-model="imageData" :height="300" :width="330" :placeholder-font-size="18" :prevent-white-space="true"></croppa>
+        <croppa v-model="store.imageData" :height="300" :width="330" :placeholder-font-size="18" :prevent-white-space="true"></croppa>
         <star-rating id="star-rating"  :star-size="50" :show-rating="false" @rating-selected="setRating"></star-rating>
     </div>
     <div class="col-ms col-sm">
         <label for="description-input">Edit your review here :</label>
-        <textarea v-model="description" id="description-input" class="form-control is-valid" rows="3" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></textarea>
+        <textarea v-model="update_post.description" id="description-input" class="form-control is-valid" rows="3" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></textarea>
         </div>
     <div class="col-md col-sm">
         <label for="beach-type">Beach Type</label>
-        <select v-model="beach_type" id="beach-type" class="form-control is-valid">
-            <option :key="beach_type" v-for="beach_type in beach_types">{{beach_type}}</option>
+        <select v-model="update_post.beach_type" id="beach-type" class="form-control is-valid">
+            <option :key="beach_type" v-for="beach_type in store.beach_types">{{beach_type}}</option>
         </select>
 
         <label for="lifeguard-check">Lifeguard Tower ?</label>
-        <select v-model="lf_tower" id="lifeguard-check" class="form-control is-valid">
-            <option :key="lf_tower" v-for="lf_tower in lf_towers">{{lf_tower}}</option>
+        <select v-model="update_post.lf_tower" id="lifeguard-check" class="form-control is-valid">
+            <option :key="lf_tower" v-for="lf_tower in store.lf_towers">{{lf_tower}}</option>
         </select>
 
         <label for="pets-check">Pets allowed ?</label>
-        <select v-model="pets_allowed_answer" id="pets-check" class="form-control is-valid">
-            <option :key="pets_allowed_answer" v-for="pets_allowed_answer in pets_allowed">{{pets_allowed_answer}}</option>
+        <select v-model="update_post.pets_allowed_answer" id="pets-check" class="form-control is-valid">
+            <option :key="pets_allowed_answer" v-for="pets_allowed_answer in store.pets_allowed">{{pets_allowed_answer}}</option>
         </select>
 
         <label for="free-check">Free to access ?</label>
-        <select v-model="free_beach" id="free-check" class="form-control is-valid">
-            <option :key="free_beach" v-for="free_beach in free_beaches">{{free_beach}}</option>
+        <select v-model="update_post.free_beach" id="free-check" class="form-control is-valid">
+            <option :key="free_beach" v-for="free_beach in store.free_beaches">{{free_beach}}</option>
         </select>
 
         <label for="beach-check">Beach Name :</label>
-        <input v-model="title" id="beach-check" type="text" class="form-control is-valid" placeholder="Beach Name">
+        <input v-model="update_post.title" id="beach-check" type="text" class="form-control is-valid" placeholder="Beach Name">
     </div>
   </div>
   <div style="margin-top:40px; margin-bottom:20px;" class="input">
@@ -76,18 +76,16 @@ export default {
         return{
             store,
             post_data:'',
-            beach_types:['Rocky','Sandy','Concrete'],
-            beach_type:undefined,
-            lf_towers:['Yes','No'],
-            lf_tower:undefined,
-            pets_allowed:['Yes','No'],
-            pets_allowed_answer:'',
-            free_beaches:['Yes','No'],
-            free_beach:undefined,
-            description:undefined,
-            imageData:undefined,
-            title:undefined,
-            score:undefined
+            update_post: {
+                title: '',
+                postedBy: '',
+                description: '',
+                beach_type: '',
+                lf_tower: '',
+                pets_allowed_answer: '',
+                free_beach: '',
+                blobData: null
+            }
         }
     },
     async mounted(){
@@ -99,9 +97,9 @@ export default {
           this.score=rating;
           console.log(this.score)
       },
-           getImageBlob(){
+        getImageBlob(){
           return new Promise((resolve,reject)=>{
-              this.imageData.generateBlob(blobData =>{
+              store.imageData.generateBlob(blobData =>{
                   if(blobData!=null){
                       resolve(blobData)
                   }else{
@@ -110,31 +108,28 @@ export default {
               })  
           })
       },
-      async updatePost(post,id){
-          try{
-            let p = await this.getImageBlob()
-            let imageName = "Defaultni user" + "/" + Date.now() + ".png";
-            let result = await storage.ref(imageName).put(p)
-            let url = await result.ref.getDownloadURL()
-
-            let post={
-                title:this.title,
-                url:url,
-                postedBy:this.post_data.postedBy,
-                score:this.score,
-                description:this.description,
-                beach_type:this.beach_type,
-                lf_tower:this.lf_tower,
-                pets_allowed_answer:this.pets_allowed_answer,
-                free_beach:this.free_beach,
-                posted_at:Date.now()
+      async updatePost() {
+            if(store.imageData.hasImage()){
+                this.update_post.blobData = await this.getImageBlob()
+            }else{
+                this.update_post.blobData = null
             }
-            await Posts.update_post(post,this.id)
-         }catch(e){
-             console.log("Error!",e)
+            let data = new FormData()
+            for(const property in this.update_post){
+                if(this.update_post[property] != null && this.update_post[property] != ''){
+                    data.append(property, this.update_post[property])
+                }
             }
-            this.$router.push({name:'Home'})
-      }
+            data.append('posted_at', Date.now())
+            data.append('token', localStorage.getItem('token'))
+            let config = {
+                header: {
+                    'Content-Type' : 'multipart/form-data',
+                }
+            }
+            await Posts.update_post(data, config, this.id)
+            this.$router.go()
+        }
     },
     components: {
       StarRating

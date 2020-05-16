@@ -4,7 +4,9 @@
         <div class="card-body">
         <p id="postedBy-text">{{info.postedBy.name}}</p>
         <p id="beach-location-text"><img id="post-location-icon" src="@/assets/maps-and-flags.png" alt="">{{info.title}}</p>
-         <button @click="goToEdit()" id="edit-button" type="button" class="btn btn-danger btn-sm">Edit Post</button>
+        <div id="edit-button" v-on:click.stop="goToEdit()">
+          <i class="fas fa-cog"></i>
+        </div>
         </div>
       </div>
 </template>
@@ -19,7 +21,7 @@ export default {
   methods:{
     goToEdit(){
       if(this.$route.name !== 'EditPost'){
-        this.$router.push({path:`edit-post/${this.info.id}`})
+        this.$router.push({path:`edit-post/${this.info._id}`})
       }
     }
   }
@@ -57,7 +59,10 @@ export default {
   transform: translate(135px,-140px);
 }
 #edit-button{
-  transform: translate(-120px,-140px);
+  width:25px;
+  height: 25px;
+  font-size: 25px;
+  transform: translate(200px,-158px);
 }
 .card-body{
   background-color: rgb(220, 234, 247);
