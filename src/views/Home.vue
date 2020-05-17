@@ -58,20 +58,25 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://localhost:5000/user', { headers: { token: localStorage.getItem('token')}})
+    axios.get('http://localhost:3000/user', { headers: { token: localStorage.getItem('token')}})
     .then((res) => {
-      localStorage.setItem('username', res.data.userData.name)
-    })
+      console.log(res.data)
+      localStorage.setItem('name', res.data.UserData.name)
+    }).catch(error => {
+      localStorage.clear()
+      this.$router.push('/login');
+    });
     this.fetchPosts()
   },
   methods:{
     async fetchPosts() {
-      let res = await axios.get('http://localhost:5000/posts');
+      let term=store.searchTerm
+      let res = await axios.get(`http://localhost:3000/posts?title=${term}`);
       store.posts = res.data;
       console.log(res)
     },
     details(post){
-        this.$router.push({path:`post/${post.title}`})
+        this.$router.push({path:`post/${post._id}`})
     }
   },
   computed:{
