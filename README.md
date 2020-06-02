@@ -19,6 +19,6 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config
 
 WHAT'S NEW:
-1.Napravljen search 
+1.Napravljen authenticated delete za posts,comments i replyes
 
 
