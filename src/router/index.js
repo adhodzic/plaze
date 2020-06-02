@@ -45,6 +45,12 @@ const routes = [
     props:true,
     name: 'PostDetail',
     component: () => import(/* webpackChunkName: "about" */ '../views/PostDetail.vue')
+  },
+  {
+    path: '/edit-post/:id',
+    props:true,
+    name: 'EditPost',
+    component: () => import(/* webpackChunkName: "about" */ '../views/EditPost.vue')
   }
 ]
 
