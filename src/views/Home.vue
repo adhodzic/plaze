@@ -58,20 +58,18 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://localhost:5000/user', { headers: { token: localStorage.getItem('token')}})
-    .then((res) => {
-      localStorage.setItem('username', res.data.userData.name)
-    })
+    Posts.getUser()
     this.fetchPosts()
   },
   methods:{
     async fetchPosts() {
-      let res = await axios.get('http://localhost:5000/posts');
+      let term=store.searchTerm
+      let res = await axios.get(`/posts?title=${term}`);
       store.posts = res.data;
-      console.log(res)
+      console.log(store.posts)
     },
     details(post){
-        this.$router.push({path:`post/${post.title}`})
+        this.$router.push({path:`post/${post._id}`})
     }
   },
   computed:{

@@ -49,11 +49,11 @@ export default {
                 email: this.email,
                 password: this.password
             }
-            axios.post('http://localhost:5000/login', user)
+            axios.post('/login', user)
             .then(res =>{
                 if(res.status == 200) {
                     localStorage.setItem('token', res.data.token)
-                    console.log(localStorage);
+                    console.log("token", localStorage);
                     this.$router.push('/')
                 }
                 this.error = '';
