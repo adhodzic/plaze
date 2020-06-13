@@ -19,6 +19,6 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config
 
 WHAT'S NEW:
-1.Napravljen search 
+1.Napravljen kompletan user profile sa mogucnostima updatea username, lozinke i brisanja accounta.
 
 
