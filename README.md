@@ -19,6 +19,6 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config
 
 WHAT'S NEW:
-1.Napravljen search 
+Sve funkcionalnosti rade
 
 
