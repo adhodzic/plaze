@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import VuePageTransition from 'vue-page-transition'
 import Croppa from 'vue-croppa';
+import VueApexCharts from 'vue-apexcharts'
+
+Vue.component('apexchart', VueApexCharts)
 
 Vue.use(Croppa);
 

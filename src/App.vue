@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import store from '@/store.js';
     export default{
         data(){
@@ -50,8 +51,27 @@ import store from '@/store.js';
             else{
                  this.$router.push('/');
             }
+            this.getBeachType();
         },
         methods: {
+            getBeachType(){
+            axios.get('/types')
+            .then((res)=>{
+                console.log(res)
+                store.num_concrete=res.data.concrete_num;
+                store.num_rocky=res.data.rocky_num;
+                store.num_sandy=res.data.sandy_num;
+
+                store.lf_yes=res.data.lifeguardY;
+                store.lf_no=res.data.lifeguardN;
+
+                store.petsYes=res.data.petsY;
+                store.petsNo=res.data.petsN;
+
+                store.free_yes=res.data.freeY;
+                store.free_no=res.data.freeN;
+            })
+        },
             logout(){
                 localStorage.clear()
                 this.$router.push('/login');

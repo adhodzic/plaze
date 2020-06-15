@@ -18,5 +18,18 @@ export default{
   free_beach:'',
   posted_at:'',
   //-----------------//
-  imageData:null
+  imageData:null,
+  //-----------------//
+  num_rocky:undefined,
+  num_sandy:undefined,
+  num_concrete:undefined,
+  lf_yes:undefined,
+  lf_no:undefined,
+  petsYes:undefined,
+  petsNo:undefined,
+  free_yes:undefined,
+  free_no:undefined,
+  //-----------------//
+  posts2:[],
+  searchTerm2:''
 }

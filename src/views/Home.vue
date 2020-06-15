@@ -58,20 +58,18 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://localhost:5000/user', { headers: { token: localStorage.getItem('token')}})
-    .then((res) => {
-      localStorage.setItem('username', res.data.userData.name)
-    })
+    Posts.getUser()
     this.fetchPosts()
   },
   methods:{
     async fetchPosts() {
-      let res = await axios.get('http://localhost:5000/posts');
+      let term=store.searchTerm
+      let res = await axios.get(`/posts?title=${term}`);
       store.posts = res.data;
-      console.log(res)
+      console.log(store.posts)
     },
     details(post){
-        this.$router.push({path:`post/${post.title}`})
+        this.$router.push({path:`post/${post._id}`})
     }
   },
   computed:{
@@ -106,9 +104,6 @@ export default {
           color: whitesmoke;
           transition: font-size 0.5s;
       }
-      h3:hover{
-          font-size:30px
-      }
       button{
           display:none;
       }
@@ -119,72 +114,6 @@ export default {
    #searchbar-mobile{
       display:none;
   }
-  @-webkit-keyframes swing
-{
-    15%
-    {
-        -webkit-transform: translateX(5px);
-        transform: translateX(5px);
-    }
-    30%
-    {
-        -webkit-transform: translateX(-5px);
-       transform: translateX(-5px);
-    } 
-    50%
-    {
-        -webkit-transform: translateX(3px);
-        transform: translateX(3px);
-    }
-    65%
-    {
-        -webkit-transform: translateX(-3px);
-        transform: translateX(-3px);
-    }
-    80%
-    {
-        -webkit-transform: translateX(2px);
-        transform: translateX(2px);
-    }
-    100%
-    {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
-@keyframes swing
-{
-    15%
-    {
-        -webkit-transform: translateX(5px);
-        transform: translateX(5px);
-    }
-    30%
-    {
-        -webkit-transform: translateX(-5px);
-        transform: translateX(-5px);
-    }
-    50%
-    {
-        -webkit-transform: translateX(3px);
-        transform: translateX(3px);
-    }
-    65%
-    {
-        -webkit-transform: translateX(-3px);
-        transform: translateX(-3px);
-    }
-    80%
-    {
-        -webkit-transform: translateX(2px);
-        transform: translateX(2px);
-    }
-    100%
-    {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
   .flex-container {
   display: flex;
   flex-wrap: wrap;
