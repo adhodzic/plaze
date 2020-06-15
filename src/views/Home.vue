@@ -11,16 +11,16 @@
       <div class="collapse multi-collapse" id="collapse-navbar">
       <div id="collapse-div" class="card card-body">
               <div style="margin-bottom:15px;" class="row">
-              <div class="col">
+              <div v-if="this.token !== null" class="col">
                   <router-link to="/add"><a href="#"><i id="sidebar-icon" class="fas fa-plus-circle"></i></a></router-link>
               </div>
-              <div class="col">
+              <div v-if="this.token !== null" class="col">
                   <router-link to="/my-reviews"><a href="#"><i id="sidebar-icon" class="fas fa-images"></i></a></router-link>
               </div>
-                    <div class="col">
+              <div class="col">
                   <router-link to="/stats"><a href="#"><i id="sidebar-icon" class="fas fa-chart-pie"></i></a></router-link>
               </div>
-                    <div class="col">
+              <div class="col">
                   <router-link to="/login"><a href="#"><i id="sidebar-icon" class="fas fa-sign-out-alt"></i></a></router-link>
               </div>
           </div>
@@ -49,16 +49,16 @@ export default {
   },
   data(){
     return{
-      store
+      store,
+      token: null
     }
   },
-   created(){
-    if(localStorage.getItem('token') === null){
-      this.$router.push('/login');
+  async mounted() {
+    if(localStorage.getItem('token') !== null){
+      Posts.getUser()
     }
-  },
-  mounted() {
-    Posts.getUser()
+    this.token = await localStorage.getItem('token');
+    console.log(this.token)
     this.fetchPosts()
   },
   methods:{

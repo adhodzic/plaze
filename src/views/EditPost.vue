@@ -3,7 +3,6 @@
     <div class="row">
         <div class="col">
              <img style="height:400px; width:400px;"  :src="post_data.url" class="figure-img img-fluid rounded" alt="Post Image" />
-             <star-rating id="star-rating"  :star-size="50" :read-only="true" :show-rating="false" :rating="post_data.score"></star-rating>
         </div>
         <div class="col-md col-sm">
             <p>{{post_data.description}}</p>
@@ -26,7 +25,6 @@
     <div class="row row-cols-4">
     <div class="col-md col-sm">
         <croppa v-model="store.imageData" :height="300" :width="330" :placeholder-font-size="18" :prevent-white-space="true"></croppa>
-        <star-rating id="star-rating"  :star-size="50" :show-rating="false" @rating-selected="setRating"></star-rating>
     </div>
     <div class="col-ms col-sm">
         <label for="description-input">Edit your review here :</label>
@@ -60,7 +58,6 @@
   <div style="margin-top:40px; margin-bottom:20px;" class="input">
       <form @submit.prevent="updatePost">
         <button style="margin-right:10px;" type="submit" class="btn btn-primary">Save</button>
-        <button type="submit" class="btn btn-secondary">Cancel</button>
       </form>
       <form @submit.prevent="deletePost">
           <button style="margin-right:10px; margin-top:10px" type="submit" class="btn btn-danger">Delete Post</button>

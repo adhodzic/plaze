@@ -28,7 +28,6 @@
                         <div class="flex-container">
                             <button type="submit" class="btn btn-primary"><strong>Register</strong></button>
                             <router-link to="/login"><button style="margin-left: 10px; margin-right: 30px;" type="submit" class="btn btn-danger"><strong>Login</strong></button></router-link>
-                            <a id="forgot_password" style="color:whitesmoke;" href="#"><strong>Forgot password?</strong></a>
                             <label style="color: red;" for="exampleInputPassword1"><strong>{{this.error}}</strong></label>
                         </div>
                       </form>

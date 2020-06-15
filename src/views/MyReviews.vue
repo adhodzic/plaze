@@ -1,7 +1,7 @@
 <template>
     <div class="my-reviews">
         <nav v-if="this.$route.name !== 'Login' && this.$route.name !== 'Register'" class="navbar">
-            <h3>My Reviews</h3>
+            <h3>My Posts</h3>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse-navbar" aria-expanded="false" aria-controls="multiCollapseExample2"><i class="fas fa-bars"></i></button>
             <form class="form-inline">
             <input v-model="store.searchTerm2" id="searchbar-desktop" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

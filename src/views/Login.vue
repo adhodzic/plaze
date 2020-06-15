@@ -20,6 +20,7 @@
                         <div class="flex-container">
                             <button style="margin-right: 30px;" type="submit" class="btn btn-info"><strong>Sign In</strong></button>
                             <router-link to="/register"><button style="margin-left: 10px; margin-right: 30px;" type="submit" class="btn btn-danger"><strong>Register</strong></button></router-link>
+                            <router-link to="/"><button style="margin-left: 10px; margin-right: 30px;" @click="refresh" class="btn btn-success"><strong>Go Home</strong></button></router-link>
                             <a id="forgot_password" style="color:whitesmoke;" href="#"><strong>Forgot password?</strong></a>
                         </div>
                         <label style="color: red;" for="exampleInputPassword1"><strong>{{this.error}}</strong></label>
@@ -44,6 +45,9 @@ export default {
         }
     },
     methods: {
+        refresh(){
+            this.$forceUpdate()
+        },
         login(){
             let user = {
                 email: this.email,

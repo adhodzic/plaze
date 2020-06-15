@@ -98,9 +98,9 @@
     </div>
     
 
-    <h3 id="comment-section-title">Comment Section</h3>
 
-    <div class="container">
+    <div v-if="id_localStorage !== null" class="container">
+    <h3 id="comment-section-title">Comment Section</h3>
     <div class="comment-section">
       <div class="comment-box" v-if="comment.parentId == null" :key="comment.id" v-for="comment, i in this.comments" style="margin-bottom:20px; padding-bottom:20px;">
         <p><img id="profile-picture" src="@/assets/account.png" alt="Profile Picture"> <strong style="margin-right:15px">{{comment.commentedBy["name"]}}</strong><small>{{comment.posted_at}}</small></p>
@@ -128,11 +128,11 @@
         </div>
       </div>
     </div>
-    </div>
-    <form id="comment-form" @submit.prevent="newComment()">
+     <form id="comment-form" @submit.prevent="newComment()">
           <input v-model="comment_text" id="comment-input" class="form-control" type="text" placeholder="Your comment goes here!" required/>
           <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
     </form>
+    </div>
   </div>
 </template>
 

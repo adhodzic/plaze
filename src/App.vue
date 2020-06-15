@@ -6,16 +6,16 @@
                 <li>
                     <router-link to="/"><a href="#"><i id="sidebar-icon" class="fas fa-home"></i></a></router-link>
                 </li>
-                <li>
+                <li v-if="token">
                     <router-link to="/add"><a href="#"><i id="sidebar-icon" class="fas fa-plus-circle"></i></a></router-link>
                 </li>
-                <li>
+                <li v-if="token">
                     <router-link to="/my-reviews"><a href="#"><i id="sidebar-icon" class="fas fa-images"></i></a></router-link>
                 </li>
                 <li>
                     <router-link to="/stats"><a href="#"><i id="sidebar-icon" class="fas fa-chart-pie"></i></a></router-link>
                 </li>
-                <li>
+                <li v-if="token">
                     <router-link to="/profile"><a href="#"><i id="sidebar-icon" class="fas fa-user-circle"></i></a></router-link>
                 </li>
                 <li>
@@ -41,17 +41,15 @@ import store from '@/store.js';
     export default{
         data(){
             return{
-                store
+                store,
+                token: null
             }
         },
-        mounted(){
-            if(!localStorage.getItem("token")){
-                 this.$router.push('/login');
-            }
-            else{
-                 this.$router.push('/');
-            }
-            this.getBeachType();
+        mounted() {
+            console.log("App")
+            this.token = localStorage.getItem('token')
+            this.getBeachType()
+            console.log(this.token)
         },
         methods: {
             getBeachType(){

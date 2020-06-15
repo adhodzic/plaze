@@ -7,7 +7,15 @@ let Service = axios.create({
 })
 
 let Posts = {
-
+    async checkUser(){
+      try{
+        console.log("index/ruta", localStorage.getItem('token'));
+        let auth = await Service.get('/authorised', { headers: { token: localStorage.getItem('token')}})
+        return auth.data;
+      }catch(e){
+        console.log("Nismo autorizirani", e)
+      }
+    },
     async getUser(){
       await Service.get('/api/user', { headers: { token: localStorage.getItem('token')}})
       .then((res) => {
