@@ -6,16 +6,16 @@
                 <li>
                     <router-link to="/"><a href="#"><i id="sidebar-icon" class="fas fa-home"></i></a></router-link>
                 </li>
-                <li>
+                <li v-if="token">
                     <router-link to="/add"><a href="#"><i id="sidebar-icon" class="fas fa-plus-circle"></i></a></router-link>
                 </li>
-                <li>
+                <li v-if="token">
                     <router-link to="/my-reviews"><a href="#"><i id="sidebar-icon" class="fas fa-images"></i></a></router-link>
                 </li>
                 <li>
                     <router-link to="/stats"><a href="#"><i id="sidebar-icon" class="fas fa-chart-pie"></i></a></router-link>
                 </li>
-                <li>
+                <li v-if="token">
                     <router-link to="/profile"><a href="#"><i id="sidebar-icon" class="fas fa-user-circle"></i></a></router-link>
                 </li>
                 <li>
@@ -36,22 +36,40 @@
 </template>
 
 <script>
+import axios from 'axios';
 import store from '@/store.js';
     export default{
         data(){
             return{
-                store
+                store,
+                token: null
             }
         },
-        mounted(){
-            if(!localStorage.getItem("token")){
-                 this.$router.push('/login');
-            }
-            else{
-                 this.$router.push('/');
-            }
+        mounted() {
+            console.log("App")
+            this.token = localStorage.getItem('token')
+            this.getBeachType()
+            console.log(this.token)
         },
         methods: {
+            getBeachType(){
+            axios.get('/types')
+            .then((res)=>{
+                console.log(res)
+                store.num_concrete=res.data.concrete_num;
+                store.num_rocky=res.data.rocky_num;
+                store.num_sandy=res.data.sandy_num;
+
+                store.lf_yes=res.data.lifeguardY;
+                store.lf_no=res.data.lifeguardN;
+
+                store.petsYes=res.data.petsY;
+                store.petsNo=res.data.petsN;
+
+                store.free_yes=res.data.freeY;
+                store.free_no=res.data.freeN;
+            })
+        },
             logout(){
                 localStorage.clear()
                 this.$router.push('/login');
@@ -61,9 +79,7 @@ import store from '@/store.js';
 </script>
 
 <style lang="scss" scoped>
-    .content{
-        
-    }
+
   #logout-icon{
       transform: translateX(12px);
   }

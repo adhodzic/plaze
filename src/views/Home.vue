@@ -6,22 +6,26 @@
         <form class="form-inline">
         <input v-model="store.searchTerm" id="searchbar-desktop" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         </form>
+        <p class="user-name" v-if="token"><img id="profile-picture" src="@/assets/account.png" alt="Profile Picture" style="height: 30px; width: 30px; margin-right: 15px;">{{store.name}}</p>
         </nav>
 
       <div class="collapse multi-collapse" id="collapse-navbar">
       <div id="collapse-div" class="card card-body">
               <div style="margin-bottom:15px;" class="row">
-              <div class="col">
-                  <router-link to="/add"><a href="#"><i id="sidebar-icon" class="fas fa-plus-circle"></i></a></router-link>
+              <div v-if="this.token !== null" class="col">
+                  <router-link to="/add"><a href="#"><i id="sidebar-icon" class="fas fa-plus-circle" style="color: white;"></i></a></router-link>
+              </div>
+              <div v-if="this.token !== null" class="col">
+                  <router-link to="/profile"><a href="#"><i id="sidebar-icon" class="fas fa-user-circle " style="color: white;"></i></a></router-link>
+              </div>
+              <div v-if="this.token !== null" class="col">
+                  <router-link to="/my-reviews"><a href="#"><i id="sidebar-icon" class="fas fa-images" style="color: white;"></i></a></router-link>
               </div>
               <div class="col">
-                  <router-link to="/my-reviews"><a href="#"><i id="sidebar-icon" class="fas fa-images"></i></a></router-link>
+                  <router-link to="/stats"><a href="#"><i id="sidebar-icon" class="fas fa-chart-pie" style="color: white;"></i></a></router-link>
               </div>
-                    <div class="col">
-                  <router-link to="/stats"><a href="#"><i id="sidebar-icon" class="fas fa-chart-pie"></i></a></router-link>
-              </div>
-                    <div class="col">
-                  <router-link to="/login"><a href="#"><i id="sidebar-icon" class="fas fa-sign-out-alt"></i></a></router-link>
+              <div class="col">
+                  <router-link to="/login"><a href="#"><i id="sidebar-icon" class="fas fa-sign-out-alt" style="color: white;"></i></a></router-link>
               </div>
           </div>
         <form class="form-inline">
@@ -49,29 +53,30 @@ export default {
   },
   data(){
     return{
-      store
+      store,
+      name: null,
+      token: null
     }
   },
-   created(){
-    if(localStorage.getItem('token') === null){
-      this.$router.push('/login');
+  async mounted() {
+    if(localStorage.getItem('token') !== null){
+      Posts.getUser()
+      this.name = await localStorage.getItem("name");
+      console.log("name", this.name);
     }
-  },
-  mounted() {
-    axios.get('http://localhost:5000/user', { headers: { token: localStorage.getItem('token')}})
-    .then((res) => {
-      localStorage.setItem('username', res.data.userData.name)
-    })
-    this.fetchPosts()
+    this.token = await localStorage.getItem('token');
+    console.log(this.token)
+    await this.fetchPosts()
   },
   methods:{
     async fetchPosts() {
-      let res = await axios.get('http://localhost:5000/posts');
+      let term=store.searchTerm
+      let res = await axios.get(`/posts?title=${term}`);
       store.posts = res.data;
-      console.log(res)
+      console.log(store.posts)
     },
     details(post){
-        this.$router.push({path:`post/${post.title}`})
+        this.$router.push({path:`post/${post._id}`})
     }
   },
   computed:{
@@ -95,6 +100,8 @@ export default {
 
 <style lang="scss" scoped>
  .navbar{
+      display: flex;
+      flex-direction: row;
       margin-left: 100px;
       margin-right: 80px;
       margin-top: 20px;
@@ -106,11 +113,14 @@ export default {
           color: whitesmoke;
           transition: font-size 0.5s;
       }
-      h3:hover{
-          font-size:30px
-      }
       button{
           display:none;
+      }
+      .user-name {
+        color: whitesmoke;
+        margin-top: 12px;
+        margin-right: 50px;
+        font-size: 18px;
       }
   }
   .navbar:hover{
@@ -119,72 +129,6 @@ export default {
    #searchbar-mobile{
       display:none;
   }
-  @-webkit-keyframes swing
-{
-    15%
-    {
-        -webkit-transform: translateX(5px);
-        transform: translateX(5px);
-    }
-    30%
-    {
-        -webkit-transform: translateX(-5px);
-       transform: translateX(-5px);
-    } 
-    50%
-    {
-        -webkit-transform: translateX(3px);
-        transform: translateX(3px);
-    }
-    65%
-    {
-        -webkit-transform: translateX(-3px);
-        transform: translateX(-3px);
-    }
-    80%
-    {
-        -webkit-transform: translateX(2px);
-        transform: translateX(2px);
-    }
-    100%
-    {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
-@keyframes swing
-{
-    15%
-    {
-        -webkit-transform: translateX(5px);
-        transform: translateX(5px);
-    }
-    30%
-    {
-        -webkit-transform: translateX(-5px);
-        transform: translateX(-5px);
-    }
-    50%
-    {
-        -webkit-transform: translateX(3px);
-        transform: translateX(3px);
-    }
-    65%
-    {
-        -webkit-transform: translateX(-3px);
-        transform: translateX(-3px);
-    }
-    80%
-    {
-        -webkit-transform: translateX(2px);
-        transform: translateX(2px);
-    }
-    100%
-    {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-}
   .flex-container {
   display: flex;
   flex-wrap: wrap;

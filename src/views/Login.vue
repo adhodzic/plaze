@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <body style="background-image: url('https://i.pinimg.com/originals/1f/d8/ab/1fd8abbd733c5b26029b9427f7f82461.jpg'); background-size: cover;">
+    <body>
     <div class="container">
         <div class="row">
             <div class="col"></div>
@@ -20,7 +19,7 @@
                         <div class="flex-container">
                             <button style="margin-right: 30px;" type="submit" class="btn btn-info"><strong>Sign In</strong></button>
                             <router-link to="/register"><button style="margin-left: 10px; margin-right: 30px;" type="submit" class="btn btn-danger"><strong>Register</strong></button></router-link>
-                            <a id="forgot_password" style="color:whitesmoke;" href="#"><strong>Forgot password?</strong></a>
+                            <router-link to="/"><button style="margin-left: 10px; margin-right: 30px;" @click="refresh" class="btn btn-success"><strong>Go Home</strong></button></router-link>
                         </div>
                         <label style="color: red;" for="exampleInputPassword1"><strong>{{this.error}}</strong></label>
                       </form>
@@ -28,8 +27,7 @@
             <div class="col"></div>
         </div>
     </div>
-</body>
-    </div>
+    </body>
 </template>
 
 <script>
@@ -44,16 +42,19 @@ export default {
         }
     },
     methods: {
+        refresh(){
+            this.$forceUpdate()
+        },
         login(){
             let user = {
                 email: this.email,
                 password: this.password
             }
-            axios.post('http://localhost:5000/login', user)
+            axios.post('/login', user)
             .then(res =>{
                 if(res.status == 200) {
                     localStorage.setItem('token', res.data.token)
-                    console.log(localStorage);
+                    console.log("token", localStorage);
                     this.$router.push('/')
                 }
                 this.error = '';
@@ -76,11 +77,18 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-
-body{
-    height: 700px;
+html, body{
+  height: 930px;
 }
-
+body { 
+			background-image: url('https://i.pinimg.com/originals/1f/d8/ab/1fd8abbd733c5b26029b9427f7f82461.jpg') ;
+			background-position: center center;
+			background-repeat:  no-repeat;
+			background-attachment: fixed;
+			background-size:  cover;
+			background-color: #999;
+  
+}
 .flex-container > div {
   background-color: #f1f1f1;
   width: 100px;
@@ -100,6 +108,10 @@ body{
         }
         body{
             height: 100%;
+        }
+        .btn-success {
+            transform: translateX(-10px);
+            margin-top: 10px;
         }
     }
 </style>

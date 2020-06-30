@@ -1,6 +1,6 @@
 <template>
     <div>
-        <body style="background-image: url('https://i.pinimg.com/originals/1f/d8/ab/1fd8abbd733c5b26029b9427f7f82461.jpg'); background-size: cover;">
+        <body style="background-image: url('https://i.pinimg.com/originals/1f/d8/ab/1fd8abbd733c5b26029b9427f7f82461.jpg'); background-size: cover; height: 930px;">
     <div class="container">
         <div class="row">
             <div class="col"></div>
@@ -28,7 +28,6 @@
                         <div class="flex-container">
                             <button type="submit" class="btn btn-primary"><strong>Register</strong></button>
                             <router-link to="/login"><button style="margin-left: 10px; margin-right: 30px;" type="submit" class="btn btn-danger"><strong>Login</strong></button></router-link>
-                            <a id="forgot_password" style="color:whitesmoke;" href="#"><strong>Forgot password?</strong></a>
                             <label style="color: red;" for="exampleInputPassword1"><strong>{{this.error}}</strong></label>
                         </div>
                       </form>
@@ -61,7 +60,7 @@ export default {
                     email: this.email,
                     password: this.password
                 }
-                axios.post('http://localhost:5000/register', newUser)
+                axios.post('/register', newUser)
                 .then(res =>{
                     console.log(res);
                     this.error = '';
@@ -69,7 +68,7 @@ export default {
                         email: this.email,
                         password: this.password
                     }
-                    axios.post('http://localhost:5000/login', user)
+                    axios.post('/login', user)
                     .then(res =>{
                         if(res.status == 200) {
                             localStorage.setItem('token', res.data.token)

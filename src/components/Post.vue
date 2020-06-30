@@ -2,19 +2,43 @@
         <div class="card" style="width: 19rem; height:370px">
         <img style="height:170px;" class="card-img-top" :src="info.url" alt="Card image cap">
         <div class="card-body">
-        <p id="postedBy-text">{{info.postedBy}}</p>
+        <p id="postedBy-text">{{info.postedBy.name}}</p>
         <p id="beach-location-text"><img id="post-location-icon" src="@/assets/maps-and-flags.png" alt="">{{info.title}}</p>
-         <star-rating id="star-rating"  :star-size="30" :read-only="true" :show-rating="false" :rating="info.score"></star-rating>
+        <div v-if="data.postedBy==id_localStorage" id="edit-button" v-on:click.stop="goToEdit()">
+          <i class="fas fa-cog"></i>
+        </div>
         </div>
       </div>
 </template>
 
 <script>
+import store from "@/store.js";
+import {Posts} from '@/services'
+import axios from 'axios';
 import StarRating from 'vue-star-rating'
 export default {
     props:["info"],
     components: {
       StarRating
+  },
+  data(){
+    return{
+      data:'',
+      id_localStorage:localStorage.getItem('UserId_localStorage')
+    }
+  },
+  async mounted(){
+      axios.get(`http://localhost:3000/posts/${this.info._id}`)
+     .then(res=>{
+       this.data=res.data
+     })
+  },
+  methods:{
+    goToEdit(){
+      if(this.$route.name !== 'EditPost'){
+        this.$router.push({path:`edit-post/${this.info._id}`})
+      }
+    }
   }
 }
 </script>
@@ -47,7 +71,13 @@ export default {
   text-align: left;
 }
 #details-button{
-  transform: translate(95px,-140px);
+  transform: translate(135px,-140px);
+}
+#edit-button{
+  width:25px;
+  height: 25px;
+  font-size: 25px;
+  transform: translate(200px,-158px);
 }
 .card-body{
   background-color: rgb(220, 234, 247);
